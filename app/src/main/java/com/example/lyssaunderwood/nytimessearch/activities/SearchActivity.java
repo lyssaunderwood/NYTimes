@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.example.lyssaunderwood.nytimessearch.Article;
 import com.example.lyssaunderwood.nytimessearch.ArticleAdapter;
+import com.example.lyssaunderwood.nytimessearch.EndlessRecyclerViewScrollListener;
 import com.example.lyssaunderwood.nytimessearch.R;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -62,8 +63,14 @@ public class SearchActivity extends AppCompatActivity {
         articles = new ArrayList<>();
         adapter = new ArticleAdapter(articles);
         rvResults.setAdapter(adapter);
-        rvResults.setLayoutManager(new StaggeredGridLayoutManager(4, StaggeredGridLayoutManager.VERTICAL));
-
+        StaggeredGridLayoutManager grid = new StaggeredGridLayoutManager(4, StaggeredGridLayoutManager.VERTICAL);
+        rvResults.setLayoutManager(grid);
+        rvResults.addOnScrollListener(new EndlessRecyclerViewScrollListener(grid) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount) {
+                customLoadMoreDataFromApi(page);
+            }
+        });
         //gvResults.setAdapter(adapter);
 
         // hook up listener for grid click
@@ -107,8 +114,6 @@ public class SearchActivity extends AppCompatActivity {
 
     public void onArticleSearch(View view) {
         String query = etQuery.getText().toString();
-
-
         //Toast.makeText(this, "Searching for " + query, Toast.LENGTH_SHORT).show();
         AsyncHttpClient client = new AsyncHttpClient();
         String url = "http://api.nytimes.com/svc/search/v2/articlesearch.json";
@@ -116,7 +121,6 @@ public class SearchActivity extends AppCompatActivity {
         params.put("api-key", "c1ac884016ce4f5a9df1ddc7fb9e63ec");
         params.put("page", 0);
         params.put("q", query);
-
         client.get(url, params, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -134,4 +138,40 @@ public class SearchActivity extends AppCompatActivity {
             }
         });
     }
+
+    public void customLoadMoreDataFromApi(int offset) {
+        // Send an API request to retrieve appropriate data using the offset value as a parameter.
+        // Deserialize API response and then construct new objects to append to the adapter
+        // Add the new objects to the data source for the adapter
+        String query = etQuery.getText().toString();
+        //Toast.makeText(this, "Searching for " + query, Toast.LENGTH_SHORT).show();
+        AsyncHttpClient client = new AsyncHttpClient();
+        String url = "http://api.nytimes.com/svc/search/v2/articlesearch.json";
+        RequestParams params = new RequestParams();
+        params.put("api-key", "c1ac884016ce4f5a9df1ddc7fb9e63ec");
+        params.put("page", offset);
+        params.put("q", query);
+        client.get(url, params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.d("DEBUG", response.toString());
+                JSONArray articleJsonResults = null;
+
+                try {
+                    articleJsonResults = response.getJSONObject("response").getJSONArray("docs");
+                    articles.addAll(Article.fromJSONArray(articleJsonResults));
+                    adapter.notifyDataSetChanged();
+                    Log.d("DEBUG", articles.toString());
+                } catch(JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        // For efficiency purposes, notify the adapter of only the elements that got changed
+        // curSize will equal to the index of the first element inserted because the list is 0-indexed
+        int curSize = adapter.getItemCount();
+        adapter.notifyItemRangeInserted(curSize, articles.size() - 1);
+    }
 }
+
