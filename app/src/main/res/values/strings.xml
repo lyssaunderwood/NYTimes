@@ -4,5 +4,6 @@
     <string name="hint">Enter search query:</string>
     <string name="search">Search</string>
     <string name="title_activity_article">ArticleActivity</string>
-    <string name="search_bar">Search NYTimes...</string>
+    <string name="search_bar">The New York Times</string>
+    <string name="share">Share</string>
 </resources>

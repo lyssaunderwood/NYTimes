@@ -22,7 +22,7 @@
         </activity>
         <activity
             android:name=".activities.ArticleActivity"
-            android:label="@string/title_activity_article"
+            android:label="@string/search_bar"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
