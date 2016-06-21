@@ -8,7 +8,7 @@
     tools:context=".activities.SearchActivity"
     tools:showIn="@layout/activity_search">
 
-    <EditText
+    <!-- <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/etQuery"
@@ -29,7 +29,7 @@
         android:layout_alignParentEnd="true"
         android:onClick="onArticleSearch"/>
 
-    <!-- <GridView
+     <GridView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/gvResults"
@@ -42,7 +42,6 @@
         android:id="@+id/rvResults"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/etQuery"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"

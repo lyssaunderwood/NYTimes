@@ -4,13 +4,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -41,9 +44,13 @@ public class SearchActivity extends AppCompatActivity {
     EditText etQuery;
     //GridView gvResults;
     Button btnSearch;
+    String addQuery;
 
     ArrayList<Article> articles;
     ArticleAdapter adapter;
+
+    StaggeredGridLayoutManager grid;
+    RecyclerView rvResults;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,21 +63,15 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     public void setupView() {
-        RecyclerView rvResults = (RecyclerView) findViewById(R.id.rvResults);
-        etQuery = (EditText) findViewById(R.id.etQuery);
+        rvResults = (RecyclerView) findViewById(R.id.rvResults);
+        //etQuery = (EditText) findViewById(R.id.etQuery);
         //gvResults = (GridView) findViewById(R.id.gvResults);
-        btnSearch = (Button) findViewById(R.id.btnSearch);
+        //btnSearch = (Button) findViewById(R.id.btnSearch);
         articles = new ArrayList<>();
         adapter = new ArticleAdapter(articles);
         rvResults.setAdapter(adapter);
-        StaggeredGridLayoutManager grid = new StaggeredGridLayoutManager(4, StaggeredGridLayoutManager.VERTICAL);
+        grid = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
         rvResults.setLayoutManager(grid);
-        rvResults.addOnScrollListener(new EndlessRecyclerViewScrollListener(grid) {
-            @Override
-            public void onLoadMore(int page, int totalItemsCount) {
-                customLoadMoreDataFromApi(page);
-            }
-        });
         //gvResults.setAdapter(adapter);
 
         // hook up listener for grid click
@@ -93,8 +94,29 @@ public class SearchActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_search, menu);
-        return true;
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_search, menu);
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // perform query here
+                addQuery = query;
+                onArticleSearch();
+                // workaround to avoid issues with some emulators and keyboard devices firing twice if a keyboard enter is used
+                // see https://code.google.com/p/android/issues/detail?id=24599
+                searchView.clearFocus();
+
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -112,15 +134,24 @@ public class SearchActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void onArticleSearch(View view) {
-        String query = etQuery.getText().toString();
+    public void onArticleSearch() {
+        rvResults.clearOnScrollListeners();
+        rvResults.addOnScrollListener(new EndlessRecyclerViewScrollListener(grid) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount) {
+                customLoadMoreDataFromApi(page);
+            }
+        });
+
+        articles.clear();
+        //String query = etQuery.getText().toString();
         //Toast.makeText(this, "Searching for " + query, Toast.LENGTH_SHORT).show();
         AsyncHttpClient client = new AsyncHttpClient();
         String url = "http://api.nytimes.com/svc/search/v2/articlesearch.json";
         RequestParams params = new RequestParams();
         params.put("api-key", "c1ac884016ce4f5a9df1ddc7fb9e63ec");
         params.put("page", 0);
-        params.put("q", query);
+        params.put("q", addQuery);
         client.get(url, params, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -143,14 +174,14 @@ public class SearchActivity extends AppCompatActivity {
         // Send an API request to retrieve appropriate data using the offset value as a parameter.
         // Deserialize API response and then construct new objects to append to the adapter
         // Add the new objects to the data source for the adapter
-        String query = etQuery.getText().toString();
+        //String query = etQuery.getText().toString();
         //Toast.makeText(this, "Searching for " + query, Toast.LENGTH_SHORT).show();
         AsyncHttpClient client = new AsyncHttpClient();
         String url = "http://api.nytimes.com/svc/search/v2/articlesearch.json";
         RequestParams params = new RequestParams();
         params.put("api-key", "c1ac884016ce4f5a9df1ddc7fb9e63ec");
         params.put("page", offset);
-        params.put("q", query);
+        params.put("q", addQuery);
         client.get(url, params, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
