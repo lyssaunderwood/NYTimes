@@ -1,6 +1,8 @@
 package com.example.lyssaunderwood.nytimessearch.activities;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -14,23 +16,32 @@ import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.TextView;
 
 import com.example.lyssaunderwood.nytimessearch.Article;
 import com.example.lyssaunderwood.nytimessearch.R;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class ArticleActivity extends AppCompatActivity {
+    @BindView(R.id.wvArticle) WebView webView;
+    @BindView(R.id.toolbar) Toolbar toolbar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        ButterKnife.bind(this);
+        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         //getSupportActionBar().hide();
+        toolbar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#800080")));
 
         Article article = (Article) getIntent().getSerializableExtra("article");
 
-        WebView webView = (WebView) findViewById(R.id.wvArticle);
+        //WebView webView = (WebView) findViewById(R.id.wvArticle);
 
         webView.setWebViewClient(new WebViewClient() {
             @Override
@@ -54,9 +65,9 @@ public class ArticleActivity extends AppCompatActivity {
         shareIntent.setType("text/plain");
 
         // get reference to WebView
-        WebView wvArticle = (WebView) findViewById(R.id.wvArticle);
+        //WebView wvArticle = (WebView) findViewById(R.id.wvArticle);
         // pass in the URL currently being used by the WebView
-        shareIntent.putExtra(Intent.EXTRA_TEXT, wvArticle.getUrl());
+        shareIntent.putExtra(Intent.EXTRA_TEXT, webView.getUrl());
 
         miShare.setShareIntent(shareIntent);
         return super.onCreateOptionsMenu(menu);

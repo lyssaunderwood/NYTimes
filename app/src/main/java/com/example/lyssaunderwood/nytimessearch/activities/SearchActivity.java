@@ -1,6 +1,9 @@
 package com.example.lyssaunderwood.nytimessearch.activities;
 
+import android.app.ActionBar;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -37,33 +40,38 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import cz.msebera.android.httpclient.Header;
 
 public class SearchActivity extends AppCompatActivity {
-
-    EditText etQuery;
+    @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.rvResults) RecyclerView rvResults;
+    //EditText etQuery;
     //GridView gvResults;
-    Button btnSearch;
+    //Button btnSearch;
     String addQuery;
 
     ArrayList<Article> articles;
     ArticleAdapter adapter;
 
     StaggeredGridLayoutManager grid;
-    RecyclerView rvResults;
+    //RecyclerView rvResults;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        ButterKnife.bind(this);
+        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         setupView();
+        toolbar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#800080")));
 
     }
 
     public void setupView() {
-        rvResults = (RecyclerView) findViewById(R.id.rvResults);
+        //rvResults = (RecyclerView) findViewById(R.id.rvResults);
         //etQuery = (EditText) findViewById(R.id.etQuery);
         //gvResults = (GridView) findViewById(R.id.gvResults);
         //btnSearch = (Button) findViewById(R.id.btnSearch);

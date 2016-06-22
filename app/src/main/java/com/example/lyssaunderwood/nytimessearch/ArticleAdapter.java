@@ -17,6 +17,9 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 // Create the basic adapter extending from RecyclerView.Adapter
 // Note that we specify the custom ViewHolder which gives us access to our views
 public class ArticleAdapter extends
@@ -29,12 +32,12 @@ public class ArticleAdapter extends
         // for any view that will be set as you render a row
         public TextView tvTitle;
         public ImageView imageView;
-        private Context context;
-
+        //private Context context;
 
         // We also create a constructor that accepts the entire item row
         // and does the view lookups to find each subview
         public ViewHolder(View itemView) {
+            //ButterKnife.bind(this, itemView);
             // Stores the itemView in a public final member variable that can be used
             // to access the context from any ViewHolder instance.
             super(itemView);
@@ -54,6 +57,7 @@ public class ArticleAdapter extends
             v.getContext().startActivity(i);
 
         }
+
     }
 
     private ArrayList<Article> mArticles;
