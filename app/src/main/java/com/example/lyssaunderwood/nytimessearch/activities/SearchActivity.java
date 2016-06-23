@@ -70,6 +70,7 @@ public class SearchActivity extends AppCompatActivity {
         //flag = 0;
         filter = new Filters(false, false, false, null, null);
 
+        topStories();
     }
 
     public void setupView() {
@@ -178,13 +179,13 @@ public class SearchActivity extends AppCompatActivity {
         // if not 0 size then add it as a parameter
         ArrayList<String> filtering = new ArrayList<>();
         if (filter.isArts()) {
-            filtering.add("Arts ");
+            filtering.add("Arts");
         }
         if (filter.isFashion()) {
-            filtering.add("Fashion ");
+            filtering.add("Fashion");
         }
         if (filter.isSports()) {
-            filtering.add("Sports ");
+            filtering.add("Sports");
         }
         if (filtering.size() != 0) {
             String newFilter = "news_desk:(";
@@ -236,13 +237,13 @@ public class SearchActivity extends AppCompatActivity {
         // if not 0 size then add it as a parameter
         ArrayList<String> filtering = new ArrayList<>();
         if (filter.isArts()) {
-            filtering.add("Arts ");
+            filtering.add("Arts");
         }
         if (filter.isFashion()) {
-            filtering.add("Fashion ");
+            filtering.add("Fashion");
         }
         if (filter.isSports()) {
-            filtering.add("Sports ");
+            filtering.add("Sports");
         }
         if (filtering.size() != 0) {
             String newFilter = "news_desk:(";
@@ -292,6 +293,44 @@ public class SearchActivity extends AppCompatActivity {
             spinnerVal = filter.getSpinnerVal();
 
         }
+    }
+
+    public void topStories() {
+        rvResults.clearOnScrollListeners();
+        rvResults.addOnScrollListener(new EndlessRecyclerViewScrollListener(grid) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount) {
+                customLoadMoreDataFromApi(page);
+            }
+        });
+
+        articles.clear();
+        //String query = etQuery.getText().toString();
+        //Toast.makeText(this, "Searching for " + query, Toast.LENGTH_SHORT).show();
+        AsyncHttpClient client = new AsyncHttpClient();
+        String url = "http://api.nytimes.com/svc/search/v2/articlesearch.json";
+        RequestParams params = new RequestParams();
+        params.put("api-key", "c1ac884016ce4f5a9df1ddc7fb9e63ec");
+        params.put("page", 0);
+        params.put("callback", "callbackTopStories");
+
+        Log.d("SEARCH ACTIVITY", url + "?" + params);
+        client.get(url, params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.d("DEBUG", response.toString());
+                JSONArray articleJsonResults = null;
+
+                try {
+                    articleJsonResults = response.getJSONObject("response").getJSONArray("docs");
+                    articles.addAll(Article.fromJSONArray(articleJsonResults));
+                    adapter.notifyDataSetChanged();
+                    Log.d("DEBUG", articles.toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
 }
