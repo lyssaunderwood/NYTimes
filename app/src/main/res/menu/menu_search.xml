@@ -8,6 +8,12 @@
         android:title="@string/action_settings"
         app:showAsAction="never" />
 
+    <item
+        android:id="@+id/action_filter"
+        android:orderInCategory="50"
+        android:title="@string/filter"
+        app:showAsAction="never" />
+
     <item android:id="@+id/action_search"
         android:orderInCategory="5"
         android:title="@string/search"

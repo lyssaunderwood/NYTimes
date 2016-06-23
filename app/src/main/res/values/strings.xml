@@ -6,4 +6,10 @@
     <string name="title_activity_article">ArticleActivity</string>
     <string name="search_bar">The New York Times</string>
     <string name="share">Share</string>
+    <string name="filter">Filter</string>
+    <string-array name="spinner_array">
+        <item>Newest</item>
+        <item>Oldest</item>
+    </string-array>
+    <string name="spinner">Select</string>
 </resources>

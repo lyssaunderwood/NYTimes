@@ -1,34 +1,25 @@
 package com.example.lyssaunderwood.nytimessearch.activities;
 
-import android.app.ActionBar;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuInflater;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.GridView;
 import android.widget.Toast;
 
 import com.example.lyssaunderwood.nytimessearch.Article;
 import com.example.lyssaunderwood.nytimessearch.ArticleAdapter;
 import com.example.lyssaunderwood.nytimessearch.EndlessRecyclerViewScrollListener;
+import com.example.lyssaunderwood.nytimessearch.Filters;
 import com.example.lyssaunderwood.nytimessearch.R;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -45,8 +36,17 @@ import butterknife.ButterKnife;
 import cz.msebera.android.httpclient.Header;
 
 public class SearchActivity extends AppCompatActivity {
-    @BindView(R.id.toolbar) Toolbar toolbar;
-    @BindView(R.id.rvResults) RecyclerView rvResults;
+
+    Filters filter;
+    String spinnerVal;
+    String date;
+    //int flag;
+
+    private final int REQUEST_CODE = 20;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.rvResults)
+    RecyclerView rvResults;
     //EditText etQuery;
     //GridView gvResults;
     //Button btnSearch;
@@ -67,6 +67,8 @@ public class SearchActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         setupView();
         toolbar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#800080")));
+        //flag = 0;
+        filter = new Filters(false, false, false, null, null);
 
     }
 
@@ -138,6 +140,11 @@ public class SearchActivity extends AppCompatActivity {
         if (id == R.id.action_settings) {
             return true;
         }
+        if (id == R.id.action_filter) {
+            //Toast.makeText(getApplicationContext(), "Text", Toast.LENGTH_SHORT).show();
+            Intent j = new Intent(getApplicationContext(), FilterActivity.class);
+            startActivityForResult(j, REQUEST_CODE);
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -160,6 +167,34 @@ public class SearchActivity extends AppCompatActivity {
         params.put("api-key", "c1ac884016ce4f5a9df1ddc7fb9e63ec");
         params.put("page", 0);
         params.put("q", addQuery);
+        if (filter.getDate() != null) {
+            params.put("begin_date", date);
+        }
+        if (filter.getSpinnerVal() != null) {
+            params.put("sort", spinnerVal);
+        }
+        Log.d("SEARCH ACTIVITY", url + "?" + params);
+        //make an array list
+        // if not 0 size then add it as a parameter
+        ArrayList<String> filtering = new ArrayList<>();
+        if (filter.isArts()) {
+            filtering.add("Arts ");
+        }
+        if (filter.isFashion()) {
+            filtering.add("Fashion ");
+        }
+        if (filter.isSports()) {
+            filtering.add("Sports ");
+        }
+        if (filtering.size() != 0) {
+            String newFilter = "news_desk:(";
+                    for (int i = 0; i < filtering.size(); i++) {
+                        newFilter += filtering.get(i);
+                    }
+            newFilter += ")";
+            params.put("fq", newFilter);
+        }
+        Log.d("SEARCH ACTIVITY", url + "?" + params);
         client.get(url, params, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -171,7 +206,7 @@ public class SearchActivity extends AppCompatActivity {
                     articles.addAll(Article.fromJSONArray(articleJsonResults));
                     adapter.notifyDataSetChanged();
                     Log.d("DEBUG", articles.toString());
-                } catch(JSONException e) {
+                } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
@@ -190,6 +225,34 @@ public class SearchActivity extends AppCompatActivity {
         params.put("api-key", "c1ac884016ce4f5a9df1ddc7fb9e63ec");
         params.put("page", offset);
         params.put("q", addQuery);
+        if (filter.getDate() != null) {
+            params.put("begin_date", date);
+        }
+        if (filter.getSpinnerVal() != null) {
+            params.put("sort", spinnerVal);
+        }
+        Log.d("SEARCH ACTIVITY", url + "?" + params);
+        //make an array list
+        // if not 0 size then add it as a parameter
+        ArrayList<String> filtering = new ArrayList<>();
+        if (filter.isArts()) {
+            filtering.add("Arts ");
+        }
+        if (filter.isFashion()) {
+            filtering.add("Fashion ");
+        }
+        if (filter.isSports()) {
+            filtering.add("Sports ");
+        }
+        if (filtering.size() != 0) {
+            String newFilter = "news_desk:(";
+            for (int i = 0; i < filtering.size(); i++) {
+                newFilter += filtering.get(i);
+            }
+            newFilter += ")";
+            params.put("fq", newFilter);
+        }
+        Log.d("SEARCH ACTIVITY", url + "?" + params);
         client.get(url, params, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -201,7 +264,7 @@ public class SearchActivity extends AppCompatActivity {
                     articles.addAll(Article.fromJSONArray(articleJsonResults));
                     adapter.notifyDataSetChanged();
                     Log.d("DEBUG", articles.toString());
-                } catch(JSONException e) {
+                } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
@@ -212,5 +275,24 @@ public class SearchActivity extends AppCompatActivity {
         int curSize = adapter.getItemCount();
         adapter.notifyItemRangeInserted(curSize, articles.size() - 1);
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // REQUEST_CODE is defined above
+        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
+            // Extract name value from result extras
+            //Toast.makeText(getApplicationContext(), "Submitted", Toast.LENGTH_SHORT).show();
+            //flag = 1;
+            //date = data.getExtras().getString("date");
+            //Toast.makeText(getApplicationContext(), date, Toast.LENGTH_SHORT).show();
+            //spinnerVal = data.getExtras().getString("spinner");
+            filter = (Filters) data.getSerializableExtra("vals");
+            date = filter.getDate();
+            Toast.makeText(getApplicationContext(), date, Toast.LENGTH_SHORT).show();
+            spinnerVal = filter.getSpinnerVal();
+
+        }
+    }
+
 }
 
