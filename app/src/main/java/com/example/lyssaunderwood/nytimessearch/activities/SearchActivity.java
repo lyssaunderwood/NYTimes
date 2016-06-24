@@ -28,6 +28,7 @@ import com.loopj.android.http.RequestParams;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
@@ -278,10 +279,15 @@ public class SearchActivity extends AppCompatActivity {
             //date = data.getExtras().getString("date");
             //Toast.makeText(getApplicationContext(), date, Toast.LENGTH_SHORT).show();
             //spinnerVal = data.getExtras().getString("spinner");
-            filter = (Filters) data.getSerializableExtra("vals");
+            //filter = (Filters) data.getSerializableExtra("vals");
+            filter = (Filters) Parcels.unwrap(data.getParcelableExtra("vals"));
             date = filter.getDate();
             Toast.makeText(getApplicationContext(), date, Toast.LENGTH_SHORT).show();
             spinnerVal = filter.getSpinnerVal();
+
+            //articles.clear();
+            //adapter.notifyDataSetChanged();
+            //onArticleSearch();
 
         }
     }

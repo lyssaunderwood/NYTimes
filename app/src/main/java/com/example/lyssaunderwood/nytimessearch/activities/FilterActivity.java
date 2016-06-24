@@ -17,6 +17,8 @@ import com.example.lyssaunderwood.nytimessearch.DatePickerFragment;
 import com.example.lyssaunderwood.nytimessearch.Filters;
 import com.example.lyssaunderwood.nytimessearch.R;
 
+import org.parceler.Parcels;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
@@ -93,7 +95,7 @@ public class FilterActivity extends AppCompatActivity implements DatePickerDialo
         filter.setSpinnerVal(spinnerVal);
 
         Intent k = new Intent();
-        k.putExtra("vals", filter);
+        k.putExtra("vals", Parcels.wrap(filter));
         setResult(RESULT_OK, k);
         finish();
 

@@ -1,8 +1,11 @@
 package com.example.lyssaunderwood.nytimessearch;
 
+import org.parceler.Parcel;
+
 import java.io.Serializable;
 
-public class Filters implements Serializable{
+@Parcel
+public class Filters {
     public void setArts(boolean arts) {
         this.arts = arts;
     }
@@ -28,6 +31,10 @@ public class Filters implements Serializable{
     boolean arts;
     boolean sports;
     boolean fashion;
+
+    public Filters() {
+        
+    }
 
     public Filters(boolean art, boolean fash, boolean sport, String spinner, String begin_date) {
         date = begin_date;

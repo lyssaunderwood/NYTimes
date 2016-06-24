@@ -15,6 +15,8 @@ import com.bumptech.glide.Glide;
 import com.example.lyssaunderwood.nytimessearch.activities.ArticleActivity;
 import com.squareup.picasso.Picasso;
 
+import org.parceler.Parcels;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,7 +56,7 @@ public class ArticleAdapter extends
             Article article = mArticles.get(position);
             //Toast.makeText(v.getContext(), "Clicked", Toast.LENGTH_SHORT).show();
             Intent i = new Intent(v.getContext(), ArticleActivity.class);
-            i.putExtra("article", article);
+            i.putExtra("article", Parcels.wrap(article));
             v.getContext().startActivity(i);
 
         }

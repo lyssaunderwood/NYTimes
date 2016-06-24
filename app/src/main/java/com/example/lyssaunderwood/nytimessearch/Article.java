@@ -4,11 +4,13 @@ package com.example.lyssaunderwood.nytimessearch;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcel;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Article implements Serializable{
+@Parcel
+public class Article {
 
     public String getHeadline() {
         return headline;
@@ -25,6 +27,10 @@ public class Article implements Serializable{
     String webUrl;
     String headline;
     String thumbNail;
+
+    public Article() {
+
+    }
 
     public Article(JSONObject jsonObject) {
         try {

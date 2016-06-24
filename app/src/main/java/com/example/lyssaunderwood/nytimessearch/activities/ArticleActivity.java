@@ -21,6 +21,8 @@ import android.widget.TextView;
 import com.example.lyssaunderwood.nytimessearch.Article;
 import com.example.lyssaunderwood.nytimessearch.R;
 
+import org.parceler.Parcels;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -39,7 +41,8 @@ public class ArticleActivity extends AppCompatActivity {
         //getSupportActionBar().hide();
         toolbar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#800080")));
 
-        Article article = (Article) getIntent().getSerializableExtra("article");
+        //Article article = (Article) getIntent().getSerializableExtra("article");
+        Article article = (Article) Parcels.unwrap(getIntent().getParcelableExtra("article"));
 
         //WebView webView = (WebView) findViewById(R.id.wvArticle);
 
