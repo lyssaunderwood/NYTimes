@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.MenuInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.lyssaunderwood.nytimessearch.Article;
@@ -46,6 +47,7 @@ public class SearchActivity extends AppCompatActivity {
     private final int REQUEST_CODE = 20;
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.rvResults) RecyclerView rvResults;
+    //@BindView(R.id.pbLoading) ProgressBar pb;
     //EditText etQuery;
     //GridView gvResults;
     //Button btnSearch;
@@ -159,6 +161,7 @@ public class SearchActivity extends AppCompatActivity {
         });
 
         articles.clear();
+        //pb.setVisibility(ProgressBar.VISIBLE);
         //String query = etQuery.getText().toString();
         //Toast.makeText(this, "Searching for " + query, Toast.LENGTH_SHORT).show();
         AsyncHttpClient client = new AsyncHttpClient();
@@ -204,6 +207,7 @@ public class SearchActivity extends AppCompatActivity {
                     articleJsonResults = response.getJSONObject("response").getJSONArray("docs");
                     articles.addAll(Article.fromJSONArray(articleJsonResults));
                     adapter.notifyDataSetChanged();
+                    //pb.setVisibility(ProgressBar.INVISIBLE);
                     Log.d("DEBUG", articles.toString());
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -331,4 +335,6 @@ public class SearchActivity extends AppCompatActivity {
     }
 
 }
+
+
 

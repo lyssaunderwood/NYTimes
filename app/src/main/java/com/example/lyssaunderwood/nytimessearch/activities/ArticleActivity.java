@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.lyssaunderwood.nytimessearch.Article;
@@ -29,6 +30,7 @@ import butterknife.ButterKnife;
 public class ArticleActivity extends AppCompatActivity {
     @BindView(R.id.wvArticle) WebView webView;
     @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.pbLoading) ProgressBar pb;
 
 
     @Override
@@ -40,6 +42,7 @@ public class ArticleActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         //getSupportActionBar().hide();
         toolbar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#800080")));
+        pb.setVisibility(ProgressBar.VISIBLE);
 
         //Article article = (Article) getIntent().getSerializableExtra("article");
         Article article = (Article) Parcels.unwrap(getIntent().getParcelableExtra("article"));
@@ -50,6 +53,7 @@ public class ArticleActivity extends AppCompatActivity {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 view.loadUrl(url);
+                pb.setVisibility(ProgressBar.INVISIBLE);
                 return true;
             }
         });
