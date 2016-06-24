@@ -43,10 +43,8 @@ public class SearchActivity extends AppCompatActivity {
     //int flag;
 
     private final int REQUEST_CODE = 20;
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
-    @BindView(R.id.rvResults)
-    RecyclerView rvResults;
+    @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.rvResults) RecyclerView rvResults;
     //EditText etQuery;
     //GridView gvResults;
     //Button btnSearch;
@@ -177,23 +175,22 @@ public class SearchActivity extends AppCompatActivity {
         Log.d("SEARCH ACTIVITY", url + "?" + params);
         //make an array list
         // if not 0 size then add it as a parameter
-        ArrayList<String> filtering = new ArrayList<>();
+        ArrayList<String> newsDeskItems = new ArrayList<>();
         if (filter.isArts()) {
-            filtering.add("Arts");
+            newsDeskItems.add("\"Arts\"");
         }
         if (filter.isFashion()) {
-            filtering.add("Fashion");
+            newsDeskItems.add("\"Fashion\"");
         }
         if (filter.isSports()) {
-            filtering.add("Sports");
+            newsDeskItems.add("\"Sports\"");
         }
-        if (filtering.size() != 0) {
-            String newFilter = "news_desk:(";
-                    for (int i = 0; i < filtering.size(); i++) {
-                        newFilter += filtering.get(i);
-                    }
-            newFilter += ")";
-            params.put("fq", newFilter);
+        if (newsDeskItems.size() != 0) {
+            String newsDeskItemsStr =
+                    android.text.TextUtils.join(" ", newsDeskItems);
+            String newsDeskParamValue =
+                    String.format("news_desk:(%s)", newsDeskItemsStr);
+            params.put("fq", newsDeskParamValue);
         }
         Log.d("SEARCH ACTIVITY", url + "?" + params);
         client.get(url, params, new JsonHttpResponseHandler() {
@@ -235,23 +232,22 @@ public class SearchActivity extends AppCompatActivity {
         Log.d("SEARCH ACTIVITY", url + "?" + params);
         //make an array list
         // if not 0 size then add it as a parameter
-        ArrayList<String> filtering = new ArrayList<>();
+        ArrayList<String> newsDeskItems = new ArrayList<>();
         if (filter.isArts()) {
-            filtering.add("Arts");
+            newsDeskItems.add("\"Arts\"");
         }
         if (filter.isFashion()) {
-            filtering.add("Fashion");
+            newsDeskItems.add("\"Fashion\"");
         }
         if (filter.isSports()) {
-            filtering.add("Sports");
+            newsDeskItems.add("\"Sports\"");
         }
-        if (filtering.size() != 0) {
-            String newFilter = "news_desk:(";
-            for (int i = 0; i < filtering.size(); i++) {
-                newFilter += filtering.get(i);
-            }
-            newFilter += ")";
-            params.put("fq", newFilter);
+        if (newsDeskItems.size() != 0) {
+            String newsDeskItemsStr =
+                    android.text.TextUtils.join(" ", newsDeskItems);
+            String newsDeskParamValue =
+                    String.format("news_desk:(%s)", newsDeskItemsStr);
+            params.put("fq", newsDeskParamValue);
         }
         Log.d("SEARCH ACTIVITY", url + "?" + params);
         client.get(url, params, new JsonHttpResponseHandler() {
@@ -270,11 +266,6 @@ public class SearchActivity extends AppCompatActivity {
                 }
             }
         });
-
-        // For efficiency purposes, notify the adapter of only the elements that got changed
-        // curSize will equal to the index of the first element inserted because the list is 0-indexed
-        int curSize = adapter.getItemCount();
-        adapter.notifyItemRangeInserted(curSize, articles.size() - 1);
     }
 
     @Override

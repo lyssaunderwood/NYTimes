@@ -21,13 +21,18 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class FilterActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener{
     DatePickerFragment newFragment;
 
+    @BindView(R.id.spSort) Spinner spSort;
+    @BindView(R.id.etDate) EditText etDate;
     String date;
     Filters filter;
-    Spinner spSort;
-    EditText etDate;
+    //Spinner spSort;
+    //EditText etDate;
     Calendar c;
     String stringMonth;
     String stringDay;
@@ -39,10 +44,11 @@ public class FilterActivity extends AppCompatActivity implements DatePickerDialo
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_filter);
+        ButterKnife.bind(this);
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#800080")));
         filter = new Filters(false, false, false, null, null);
-        spSort = (Spinner) findViewById(R.id.spSort);
-        etDate = (EditText) findViewById(R.id.etDate);
+        //spSort = (Spinner) findViewById(R.id.spSort);
+        //etDate = (EditText) findViewById(R.id.etDate);
         etDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.lyssaunderwood.nytimessearch.activities.ArticleActivity;
 import com.squareup.picasso.Picasso;
 
@@ -93,7 +94,7 @@ public class ArticleAdapter extends
         imageView.setImageResource(0);
         String thumbnail = article.getThumbNail();
         if (!TextUtils.isEmpty(thumbnail)) {
-            Picasso.with(imageView.getContext()).load(thumbnail).into(imageView);
+            Glide.with(imageView.getContext()).load(thumbnail).into(imageView);
         }
 
 
