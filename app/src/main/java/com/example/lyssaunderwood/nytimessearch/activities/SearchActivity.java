@@ -140,6 +140,8 @@ public class SearchActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent set = new Intent(getApplicationContext(), SettingsActivity.class);
+            startActivity(set);
             return true;
         }
         if (id == R.id.action_filter) {
@@ -289,7 +291,7 @@ public class SearchActivity extends AppCompatActivity {
             //Toast.makeText(getApplicationContext(), date, Toast.LENGTH_SHORT).show();
             spinnerVal = filter.getSpinnerVal();
 
-            articles.clear();
+            //articles.clear();
             adapter.notifyDataSetChanged();
             onArticleSearch();
 
