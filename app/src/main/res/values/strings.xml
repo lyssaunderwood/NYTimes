@@ -7,6 +7,7 @@
     <string name="search_bar">The New York Times</string>
     <string name="share">Share</string>
     <string name="filter">Filter</string>
+    <string name="filter_act">Filter Your Search:</string>
     <string-array name="spinner_array">
         <item>Newest</item>
         <item>Oldest</item>

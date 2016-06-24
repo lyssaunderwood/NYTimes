@@ -282,12 +282,12 @@ public class SearchActivity extends AppCompatActivity {
             //filter = (Filters) data.getSerializableExtra("vals");
             filter = (Filters) Parcels.unwrap(data.getParcelableExtra("vals"));
             date = filter.getDate();
-            Toast.makeText(getApplicationContext(), date, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getApplicationContext(), date, Toast.LENGTH_SHORT).show();
             spinnerVal = filter.getSpinnerVal();
 
-            //articles.clear();
-            //adapter.notifyDataSetChanged();
-            //onArticleSearch();
+            articles.clear();
+            adapter.notifyDataSetChanged();
+            onArticleSearch();
 
         }
     }

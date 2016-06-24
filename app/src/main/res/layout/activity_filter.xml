@@ -89,7 +89,8 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:onClick="onSave"
-        android:background="#ffffff" />
+        android:background="#800080"
+        android:textColor="#D3D3D3" />
 
     <EditText
         android:layout_width="wrap_content"
